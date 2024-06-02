@@ -1,4 +1,4 @@
-import { addCart } from "../../../store/modules/food";
+import { addCart, getTotalPrice } from "../../../store/modules/food";
 import "./index.scss";
 import { useSelector, useDispatch } from "react-redux";
 const Foods = ({
@@ -14,7 +14,6 @@ const Foods = ({
   tag,
   count = 1,
 }) => {
-  // const { cartList } = useSelector((state) => state.food);
   const dispatch = useDispatch();
   return (
     <dd className="cate-goods">
@@ -42,7 +41,7 @@ const Foods = ({
           <div className="goods-count">
             <span
               className="plus"
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   addCart({
                     id,
@@ -57,8 +56,9 @@ const Foods = ({
                     tag,
                     count,
                   })
-                )
-              }
+                );
+                dispatch(getTotalPrice());
+              }}
             >
               +
             </span>

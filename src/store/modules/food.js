@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 const foodStore = createSlice({
   name: "food",
@@ -6,6 +6,7 @@ const foodStore = createSlice({
     foodList: [],
     activeIndex: 0,
     cartList: [],
+    totalPrice: 0,
   },
   reducers: {
     getFood(state, action) {
@@ -24,15 +25,22 @@ const foodStore = createSlice({
         state.cartList.push(action.payload);
       }
     },
+    getTotalPrice(state) {
+      state.totalPrice = state.cartList.reduce(
+        (current, prev) => current + prev.price * prev.count,
+        0
+      );
+    },
   },
 });
-const { getFood, changeActiveIndex, addCart } = foodStore.actions;
+const { getFood, changeActiveIndex, addCart, getTotalPrice } =
+  foodStore.actions;
 const fetchHandleFood = () => {
   return async (dispatch) => {
     const res = await axios.get(" http://localhost:3004/takeaway");
     dispatch(getFood(res.data));
   };
 };
-export { fetchHandleFood, changeActiveIndex, addCart };
+export { fetchHandleFood, changeActiveIndex, addCart, getTotalPrice };
 const foodRuducer = foodStore.reducer;
 export default foodRuducer;
